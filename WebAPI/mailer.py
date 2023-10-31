@@ -1,9 +1,14 @@
 import smtplib
 import json
+from pathlib import Path
 
 class Mailer:
     def __init__(self):
-        with open('settings.json', 'r') as f:
+        current_dir = Path(__file__).parent
+
+        settings_path = current_dir / '..' / 'settings.json'
+
+        with open(settings_path, 'r') as f:
             settings = json.load(f)
 
         self.notification_recipient = settings['recipient_email']
@@ -18,10 +23,7 @@ class Mailer:
             server.sendmail(self.email, recipient, f"Subject: {subject}\n\n{message}")
 
     def send_notification(self, subject, message):
-        with open('settings.json', 'r') as f:
-            settings = json.load(f)
-        recipient = settings['recipient_email']
-        self.send(subject, message, recipient)
+        self.send(subject, message, self.notification_recipient)
 
     def send_confirmation(self, recipient):
         with open('confirmation.html', 'r', encoding='utf-8') as file:

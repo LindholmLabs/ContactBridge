@@ -1,15 +1,10 @@
 from flask import Flask
-from flask_restx import Resource, Api
+from WebAPI import blueprint as api_blueprint
+from WebInterface import web_interface
 
 app = Flask(__name__)
-api = Api(app)
-
-
-@api.route('/hello')
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
+app.register_blueprint(api_blueprint, url_prefix='/api')
+app.register_blueprint(web_interface)
 
 if __name__ == '__main__':
     app.run(debug=True)

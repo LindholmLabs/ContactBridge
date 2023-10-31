@@ -1,61 +1,7 @@
-from flask import Flask
-from flask_restx import Resource, Api, fields
+from flask import Blueprint
+from flask_restx import Api
 
-from WebAPI.mailer import Mailer
-from WebAPI.dbrepository import DatabaseRepository
+blueprint = Blueprint('api', __name__)
+api = Api(blueprint)
 
-app = Flask(__name__)
-api = Api(app)
-
-mailer = Mailer()
-db_repo = DatabaseRepository()
-
-contact_fields = api.model('Contact', {
-    'email': fields.String(required=True),
-    'name': fields.String(required=True),
-    'message_content': fields.String(required=True)
-})
-
-
-@api.route('/contact')
-class contact(Resource):
-    @api.expect(contact_fields)
-    def post(self):
-        data = api.payload
-        email = data['email']
-        name = data['name']
-        message_content = data['message_content']
-
-        formatted_subject = mailer.format_subject(email)
-        formatted_message = mailer.format_message(name, email, message_content)
-
-        try:
-            mailer.send_notification(formatted_subject, formatted_message)
-        except Exception as e:
-            return {"message": f"An unknown error occurred: {str(e)}"}, 500
-
-        db_repo.save_message(name, email, formatted_subject, message_content)  # Save message to database
-
-        return {"message": "Message sent and saved successfully"}, 200
-
-
-@api.route('/messages')
-class Messages(Resource):
-    def get(self):
-        messages = db_repo.fetch_messages()
-        formatted_messages = [
-            {
-                "id": message[0],
-                "name": message[1],
-                "email": message[2],
-                "subject": message[3],
-                "message_content": message[4],
-                "timestamp": message[5]
-            }
-            for message in messages
-        ]
-        return formatted_messages, 200
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+from . import routes
