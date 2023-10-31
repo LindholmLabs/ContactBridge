@@ -1,25 +1,35 @@
 import smtplib
 import json
 
+class Mailer:
+    def __init__(self):
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
 
-def send_email(subject, message):
-    with open('secrets.json', 'r') as f:
-        credentials = json.load(f)
-    with open('settings.json', 'r') as f:
-        settings = json.load(f)
+        self.notification_recipient = settings['recipient_email']
+        self.email = settings['email']
+        self.password = settings['email_password']
+        self.smtpsrv = settings['smtp_server']
 
-    from_email = credentials['email']
-    password = credentials['password']
-    to_email = settings['recipient_email']
+    def send(self, subject, message, recipient):
+        with smtplib.SMTP(self.smtpsrv, 587) as server:
+            server.starttls()
+            server.login(self.email, self.password)
+            server.sendmail(self.email, recipient, f"Subject: {subject}\n\n{message}")
 
-    with smtplib.SMTP(credentials['smtp_server'], 587) as server:
-        server.starttls()
-        server.login(from_email, password)
-        server.sendmail(from_email, to_email, f"Subject: {subject}\n\n{message}")
+    def send_notification(self, subject, message):
+        with open('settings.json', 'r') as f:
+            settings = json.load(f)
+        recipient = settings['recipient_email']
+        self.send(subject, message, recipient)
 
+    def send_confirmation(self, recipient):
+        with open('confirmation.html', 'r', encoding='utf-8') as file:
+            html_content = file.read()
+        self.send('Confirmation Email', html_content, recipient)
 
-def format_message(name, email, content):
-    return f"MESSAGE RECEIVED FROM: {name}\nWITH EMAIL: {email}\nCONTENT:\n{content}"
+    def format_message(self, name, email, content):
+        return f"MESSAGE RECEIVED FROM: {name}\nWITH EMAIL: {email}\nCONTENT:\n{content}"
 
-def format_subject(email):
-    return f"Contact from: {email}"
+    def format_subject(self, email):
+        return f"Contact from: {email}"
