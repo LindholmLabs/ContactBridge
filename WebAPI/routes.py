@@ -1,7 +1,7 @@
 from . import api
 from flask_restx import Resource, fields
 
-from .dbrepository import DatabaseRepository
+from dbrepository import DatabaseRepository
 from .mailer import Mailer
 
 mailer = Mailer()
