@@ -2,12 +2,13 @@ import json
 from pathlib import Path
 
 from flask import Flask, request, redirect, url_for, render_template, session
-from  dbrepository import DatabaseRepository
+from dbrepository import DatabaseRepository
 from . import web_interface
 
 db = DatabaseRepository()
 
 
+@web_interface.route('/')
 @web_interface.route('/home')
 def home():
     if not session.get('logged_in'):
@@ -22,7 +23,8 @@ def home():
             "email": message[2],
             "subject": message[3],
             "message_content": message[4],
-            "timestamp": message[5]
+            "timestamp": message[5],
+            "relevance": message[6]
         }
         for message in messages
     ]
@@ -48,6 +50,7 @@ def login():
             return "Invalid credentials", 401
 
     return render_template('login.html')
+
 
 @web_interface.route('/logout')
 def logout():

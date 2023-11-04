@@ -17,21 +17,22 @@ class DatabaseRepository:
                 email TEXT NOT NULL,
                 subject TEXT NOT NULL,
                 message_content TEXT NOT NULL,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                relevance NUMERIC
             );
             """
         )
         conn.commit()
         conn.close()
 
-    def save_message(self, name, email, subject, message_content):
+    def save_message(self, name, email, subject, message_content, relevance):
         conn = sqlite3.connect(self.DATABASE_FILE)
         cursor = conn.cursor()
         cursor.execute(
             """
-            INSERT INTO messages (name, email, subject, message_content)
-            VALUES (?, ?, ?, ?)
-            """, (name, email, subject, message_content)
+            INSERT INTO messages (name, email, subject, message_content, relevance)
+            VALUES (?, ?, ?, ?, ?)
+            """, (name, email, subject, message_content, relevance)
         )
         conn.commit()
         conn.close()

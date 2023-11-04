@@ -59,7 +59,8 @@
     <ul class="list-group mt-3">
         {% for message in messages %}
         <li class="list-group-item">
-            <strong>{{ message.subject }}</strong> from {{ message.name }} ({{ message.email }}) at {{ message.timestamp }}:
+            <strong>{{ message.subject }}</strong> from {{ message.name }} ({{ message.email }})@{{ message.timestamp }}
+            relevance: {{ message.relevance }}:
             <p>{{ message.message_content }}</p>
         </li>
         {% endfor %}
