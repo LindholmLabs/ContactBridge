@@ -1,11 +1,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Messages</title>
+    <title>CB | {{ page_title }}</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -15,48 +15,22 @@
 <body>
 
 <ul id="slide-out" class="sidenav">
-    <li>
-        <div class="user-view">
-            <i class="material-icons medium" style="color: white;">account_circle</i>
-            <a href="#name"><span class="white-text name">John Doe</span></a>
-            <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
-        </div>
-    </li>
-    <li><a class="waves-effect" href="#!">Messages</a></li>
-    <li>
-        <div class="divider"></div>
-    </li>
-    <li><a class="subheader">Settings</a></li>
-    <li><a class="waves-effect" href="#!">Account</a></li>
-    <li><a class="waves-effect" href="#!">Admin</a></li>
+    {% include 'nav.html' %}
 </ul>
 
 <ul class="sidenav sidenav-fixed">
-    <li>
-        <div class="user-view">
-            <i class="material-icons medium" style="color: white;">account_circle</i>
-            <a href="#name"><span class="white-text name">John Doe</span></a>
-            <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
-        </div>
-    </li>
-    <li><a class="waves-effect" href="#!">Messages</a></li>
-    <li>
-        <div class="divider"></div>
-    </li>
-    <li><a class="subheader">Settings</a></li>
-    <li><a class="waves-effect" href="#!">Account</a></li>
-    <li><a class="waves-effect" href="#!">Admin</a></li>
+   {% include 'nav.html' %}
 </ul>
 
 <div class="header">
     <div class="content">
         <div class="container hide-on-med-and-down">
-            <h1>Messages</h1>
+            <h1>{{ page_title }}</h1>
         </div>
         <div class="hide-on-large-only">
             <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
                 <a href="#" data-target="slide-out" class="sidenav-trigger" style="flex-shrink: 0;"><i class="material-icons">menu</i></a>
-                <h1 class="mobile">Messages</h1>
+                <h1 class="mobile">{{ page_title }}</h1>
                 <div style="width: 24px;"></div>
             </div>
         </div>

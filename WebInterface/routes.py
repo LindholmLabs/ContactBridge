@@ -29,7 +29,7 @@ def home():
         for message in messages
     ]
 
-    return render_template('home.html', messages=formatted_messages)
+    return render_template('home.html', messages=formatted_messages, page_title="Messages")
 
 
 @web_interface.route('/login', methods=['GET', 'POST'])

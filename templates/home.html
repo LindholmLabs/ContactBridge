@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
+{% block title %}Child Page Title{% endblock %}
+
 {% block content %}
 <br>
-<table class="highlight responsive-table">
+<table class="highlight">
     <thead>
     <tr>
-        <th>Subject</th>
         <th>Sender</th>
         <th>Email</th>
         <th>Timestamp</th>
@@ -16,7 +17,6 @@
     <tbody>
     {% for message in messages %}
     <tr>
-        <td>{{ message.subject }}</td>
         <td>{{ message.name }}</td>
         <td>{{ message.email }}</td>
         <td>{{ message.timestamp }}</td>
