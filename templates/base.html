@@ -66,31 +66,9 @@
 
 <div class="content">
     <div class="container">
-        <br>
-        <table class="highlight responsive-table">
-            <thead>
-            <tr>
-                <th>Subject</th>
-                <th>Sender</th>
-                <th>Email</th>
-                <th>Timestamp</th>
-                <th>Relevance</th>
-                <th class="truncate">Message</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for message in messages %}
-            <tr>
-                <td>{{ message.subject }}</td>
-                <td>{{ message.name }}</td>
-                <td>{{ message.email }}</td>
-                <td>{{ message.timestamp }}</td>
-                <td>{{ message.relevance }}</td>
-                <td class="truncate-td">{{ message.message_content }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% block content %}
+        <!-- content goes here -->
+        {% endblock %}
     </div>
 </div>
 
