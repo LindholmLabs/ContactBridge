@@ -80,3 +80,7 @@ h1.mobile {
     text-align: center;
     flex-grow: 1;
 }
+
+.delete-icon {
+    color: red;
+}

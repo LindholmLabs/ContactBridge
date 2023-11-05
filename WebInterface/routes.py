@@ -36,12 +36,17 @@ def home():
 @web_interface.route('/integrations')
 def integrations():
     # Define headers and rows for the messages table
-    headers = ["ID", "Message", "Date"]
+    headers = ["ID", "Message", "Date", "Delete"]
     rows = [
         [1, "Hello World!", "2023-11-01"],
         [2, "Another Message", "2023-11-02"],
-        # ... add more rows as needed
     ]
+
+    def delete_link(row_data):
+        # Assuming row_data is a dictionary that contains an 'id' key
+        id = row_data[0]
+        # Return a string of HTML. The 'material-icons' class is used for Material Icons
+        return f'<a href="/message/delete/{id}" class="delete-icon"><i class="material-icons">delete</i></a>'
 
     # Initialize TableBuilder and configure the table
     table_builder = TableBuilder()
@@ -49,7 +54,8 @@ def integrations():
     table_builder.add_rows(rows)
     table_builder.set_pagination(enabled=True, page_size=5)
     table_builder.set_sortable(["ID", "Date"])
-    table_builder.add_callback_column("Delete", "deleteMessage")
+    table_builder.add_callback_column(delete_link)
+    table_builder.set_on_click("/message/{0}")
 
     # Build the TableInstance
     table_instance = table_builder.build()

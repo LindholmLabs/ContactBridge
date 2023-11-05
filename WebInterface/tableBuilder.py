@@ -48,8 +48,8 @@ class TableBuilder:
     def set_sortable(self, sortable_columns):
         self.table_instance.set_sortable_columns(sortable_columns)
 
-    def add_callback_column(self, name, callback):
-        self.table_instance.set_callback_column((name, callback))
+    def add_callback_column(self, callback):
+        self.table_instance.set_callback_column(callback)
 
     def set_on_click(self, url_template):
         self.table_instance.set_row_click_url_template(url_template)
