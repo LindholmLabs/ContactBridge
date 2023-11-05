@@ -1,4 +1,4 @@
-<table style="table-layout: fixed;" id="table-instance" class="highlight">
+<table class="highlight table-instance">
     <thead>
     <tr>
         {% for header, width in table.headers %}
@@ -27,11 +27,17 @@
 </table>
 
 {% if table.pagination_enabled %}
-<ul class="pagination">
+<ul class="pagination" data-current-page="{{ table.current_page }}" data-total-pages="{{ table.total_pages }}">
+    <li class="{% if table.current_page == 1 %}disabled{% else %}waves-effect{% endif %}">
+        <a href="javascript:void(0);" onclick="changePage('prev')"><i class="material-icons">chevron_left</i></a>
+    </li>
     {% for i in range(1, table.total_pages + 1) %}
     <li class="{% if table.current_page == i %}active{% else %}waves-effect{% endif %}">
         <a href="?page={{ i }}">{{ i }}</a>
     </li>
     {% endfor %}
+    <li class="{% if table.current_page == table.total_pages %}disabled{% else %}waves-effect{% endif %}">
+        <a href="javascript:void(0);" onclick="changePage('next')"><i class="material-icons">chevron_right</i></a>
+    </li>
 </ul>
 {% endif %}

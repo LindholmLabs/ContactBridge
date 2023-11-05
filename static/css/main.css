@@ -1,5 +1,4 @@
 :root {
-    /* Define your color scheme */
     --primary-color: #629da7;
     --secondary-color: #301621;
     --gradient-start: rgb(57,75,166);
@@ -9,7 +8,8 @@
     --text-gradient-end: #333;
     --sidenav-width: 250px;
     --header-font-family: 'Roboto', sans-serif;
-    --header-font-size: 52px;
+    --header-font-size: 4em;
+    --header-font-size-mobile: 3em;
     --header-line-height: 1.2;
     --truncate-max-width: 200px;
     --content-margin: 150px;
@@ -37,6 +37,12 @@ h1 {
     -webkit-text-fill-color: transparent;
     margin: 0;
     padding: 0.2em 0;
+}
+
+h1.mobile {
+    font-size: var(--header-font-size-mobile);
+    text-align: center;
+    flex-grow: 1;
 }
 
 .truncate-td {
@@ -76,15 +82,32 @@ h1 {
     height: 100%;
 }
 
-h1.mobile {
-    text-align: center;
-    flex-grow: 1;
-}
-
 .delete-icon {
     color: red;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
-td, td {
-    min-width: 100px;
+.delete-icon:hover {
+    color: darkred;
+}
+
+.flag-icon {
+    color: orange;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.flag-icon:hover {
+    color: grey;
+}
+
+.table-instance {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 500px;
+    cursor: pointer;
+}
+
+table tr, table td {
+    padding: 0;
+    margin: 0 !important;
 }
