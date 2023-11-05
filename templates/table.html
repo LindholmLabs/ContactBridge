@@ -1,42 +1,37 @@
-<table id="table-instance" class="highlight">
+<table style="table-layout: fixed;" id="table-instance" class="highlight">
     <thead>
     <tr>
-        <!-- Headers and sortable logic will be inserted here -->
-        {% for header in table.headers %}
-        <th>
-          {{ header }}
-          {% if header in table.sortable_columns %}
-            <!-- Add sorting logic/link here -->
+        {% for header, width in table.headers %}
+        <th style="width: {{ width }}">
+            {{ header }}
+            {% if header in table.sortable_columns %}
             <a href="?sort_by={{ header }}&order=asc">↑</a>
             <a href="?sort_by={{ header }}&order=desc">↓</a>
-          {% endif %}
+            {% endif %}
         </th>
         {% endfor %}
     </tr>
     </thead>
     <tbody>
-    <!-- Rows and Data will be inserted here -->
     {% for row in table.rows %}
     <tr onclick="window.location.href='{{ table.row_click_url_template.format(row[0]) }}';">
         {% for cell in row %}
-        <td>{{ cell }}</td>
+        <td><p class="truncate">{{ cell }}</p></td>
         {% endfor %}
-        <!-- Callback action buttons if any -->
-        {% if table.callback_column %}
-            <td>{{ table.callback_column(row) | safe }}</td>
-        {% endif %}
+        {% for callback_column in table.callback_columns %}
+        <td>{{ callback_column(row) | safe }}</td>
+        {% endfor %}
     </tr>
     {% endfor %}
     </tbody>
 </table>
 
 {% if table.pagination_enabled %}
-  <ul class="pagination">
-    {% set total_pages = ((table.rows|length / table.page_size) | round(0, 'ceil')) | int %}
-    {% for i in range(1, total_pages + 1) %}
+<ul class="pagination">
+    {% for i in range(1, table.total_pages + 1) %}
     <li class="{% if table.current_page == i %}active{% else %}waves-effect{% endif %}">
-      <a href="?page={{ i }}">{{ i }}</a>
+        <a href="?page={{ i }}">{{ i }}</a>
     </li>
     {% endfor %}
-  </ul>
+</ul>
 {% endif %}

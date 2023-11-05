@@ -84,3 +84,7 @@ h1.mobile {
 .delete-icon {
     color: red;
 }
+
+td, td {
+    min-width: 100px;
+}

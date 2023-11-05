@@ -44,7 +44,7 @@ class contact(Resource):
 @api.route('/messages')
 class Messages(Resource):
     def get(self):
-        messages = db_repo.fetch_messages()
+        messages = db_repo.get_all_messages()
         formatted_messages = [
             {
                 "id": message[0],

@@ -1,4 +1,6 @@
+import math
 import sqlite3
+
 
 class DatabaseRepository:
     DATABASE_FILE = 'messages.db'
@@ -37,10 +39,26 @@ class DatabaseRepository:
         conn.commit()
         conn.close()
 
-    def fetch_messages(self):
+    def get_all_messages(self):
         conn = sqlite3.connect(self.DATABASE_FILE)
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM messages ORDER BY timestamp DESC")
+        cursor.execute("SELECT id, email, relevance, message_content FROM messages ORDER BY timestamp DESC")
         messages = cursor.fetchall()
         conn.close()
         return messages
+
+    def get_messages(self, page, page_size):
+        conn = sqlite3.connect(self.DATABASE_FILE)
+        cursor = conn.cursor()
+
+        total_messages = cursor.execute('SELECT COUNT(*) FROM messages').fetchone()[0]
+        offset = (page - 1) * page_size
+        total_pages = math.ceil(total_messages / page_size)
+
+        paginated_messages = cursor.execute(
+            'SELECT id, email, relevance, message_content FROM messages ORDER BY timestamp DESC LIMIT ? OFFSET ?',
+            (page_size, offset)
+        ).fetchall()
+
+        conn.close()
+        return paginated_messages, total_pages
