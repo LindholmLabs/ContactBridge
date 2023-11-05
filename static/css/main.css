@@ -1,0 +1,56 @@
+.user-view {
+    background: rgb(57,75,166);
+    background: linear-gradient(268deg, #629da7, #301621);
+}
+
+.sidenav {
+    width: 250px;
+}
+
+.header {
+    font-family: 'Roboto', sans-serif;
+    border-bottom: 1px solid rgba(0,0,0,0.14);
+}
+
+h1 {
+    font-size: 52px;
+    line-height: 1.2;
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    padding: 0.2em 0;
+}
+
+.truncate-td {
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content {
+    margin-left: 200px;
+}
+
+@media only screen and (max-width : 992px) {
+     .content {
+         margin-left: 0;
+    }
+}
+
+.nav-center {
+    display: flex;
+    justify-content: space-between;
+     align-items: center;
+}
+
+.sidenav-trigger {
+    color: black;
+    flex-shrink: 0;
+}
+
+h1.mobile {
+    text-align: center;
+    flex-grow: 1;
+}

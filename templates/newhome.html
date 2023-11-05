@@ -1,0 +1,103 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Messages</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+
+<ul id="slide-out" class="sidenav">
+    <li>
+        <div class="user-view">
+            <i class="material-icons medium" style="color: white;">account_circle</i>
+            <a href="#name"><span class="white-text name">John Doe</span></a>
+            <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
+        </div>
+    </li>
+    <li><a class="waves-effect" href="#!">Messages</a></li>
+    <li>
+        <div class="divider"></div>
+    </li>
+    <li><a class="subheader">Settings</a></li>
+    <li><a class="waves-effect" href="#!">Account</a></li>
+    <li><a class="waves-effect" href="#!">Admin</a></li>
+</ul>
+
+<ul class="sidenav sidenav-fixed">
+    <li>
+        <div class="user-view">
+            <i class="material-icons medium" style="color: white;">account_circle</i>
+            <a href="#name"><span class="white-text name">John Doe</span></a>
+            <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
+        </div>
+    </li>
+    <li><a class="waves-effect" href="#!">Messages</a></li>
+    <li>
+        <div class="divider"></div>
+    </li>
+    <li><a class="subheader">Settings</a></li>
+    <li><a class="waves-effect" href="#!">Account</a></li>
+    <li><a class="waves-effect" href="#!">Admin</a></li>
+</ul>
+
+<div class="header">
+    <div class="content">
+        <div class="container hide-on-med-and-down">
+            <h1>Messages</h1>
+        </div>
+        <div class="hide-on-large-only">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <a href="#" data-target="slide-out" class="sidenav-trigger" style="flex-shrink: 0;"><i class="material-icons">menu</i></a>
+                <h1 class="mobile">Messages</h1>
+                <div style="width: 24px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+    <div class="container">
+        <br>
+        <table class="highlight responsive-table">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Sender</th>
+                <th>Email</th>
+                <th>Timestamp</th>
+                <th>Relevance</th>
+                <th class="truncate">Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for message in messages %}
+            <tr>
+                <td>{{ message.subject }}</td>
+                <td>{{ message.name }}</td>
+                <td>{{ message.email }}</td>
+                <td>{{ message.timestamp }}</td>
+                <td>{{ message.relevance }}</td>
+                <td class="truncate-td">{{ message.message_content }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems);
+        });
+</script>
+</body>

@@ -30,7 +30,7 @@ class contact(Resource):
         prediction = spam_detection.detect_spam(message_content)
         rounded_prediction = float(f'{prediction:.2f}')
 
-        if prediction < .05:
+        if prediction < 0.5:
             try:
                 mailer.send_notification(formatted_subject, formatted_message)
             except Exception as e:
