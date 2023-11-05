@@ -4,6 +4,7 @@ from pathlib import Path
 from flask import Flask, request, redirect, url_for, render_template, session
 from dbrepository import DatabaseRepository
 from . import web_interface
+from .tableBuilder import TableBuilder
 
 db = DatabaseRepository()
 
@@ -31,6 +32,28 @@ def home():
 
     return render_template('home.html', messages=formatted_messages, page_title="Messages")
 
+
+@web_interface.route('/integrations')
+def integrations():
+    # Define headers and rows for the messages table
+    headers = ["ID", "Message", "Date"]
+    rows = [
+        [1, "Hello World!", "2023-11-01"],
+        [2, "Another Message", "2023-11-02"],
+        # ... add more rows as needed
+    ]
+
+    # Initialize TableBuilder and configure the table
+    table_builder = TableBuilder()
+    table_builder.set_headers(headers)
+    table_builder.add_rows(rows)
+    table_builder.set_pagination(enabled=True, page_size=5)
+    table_builder.set_sortable(["ID", "Date"])
+    table_builder.add_callback_column("Delete", "deleteMessage")
+
+    # Build the TableInstance
+    table_instance = table_builder.build()
+    return render_template('integrations.html', page_title="Integrations", table=table_instance)
 
 @web_interface.route('/login', methods=['GET', 'POST'])
 def login():
