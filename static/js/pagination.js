@@ -10,11 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function changePage(direction) {
-    if (typeof currentPage === 'undefined' || typeof totalPages === 'undefined') {
-        console.error('currentPage or totalPages is undefined');
-        return;
-    }
-
     var newPage = currentPage;
     if (direction === 'next' && currentPage < totalPages) {
         newPage = currentPage + 1;

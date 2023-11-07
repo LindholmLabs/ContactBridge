@@ -1,3 +1,5 @@
+from flask import request, jsonify
+
 from MessageTagging.spam_detector import SpamDetector
 from . import api
 from flask_restx import Resource, fields
@@ -14,6 +16,7 @@ contact_fields = api.model('Contact', {
     'name': fields.String(required=True),
     'message_content': fields.String(required=True)
 })
+
 
 @api.route('/contact')
 class contact(Resource):
@@ -39,21 +42,3 @@ class contact(Resource):
         db_repo.save_message(name, email, formatted_subject, message_content, rounded_prediction)
 
         return {"message": "Message sent and saved successfully"}, 200
-
-
-@api.route('/messages')
-class Messages(Resource):
-    def get(self):
-        messages = db_repo.get_all_messages()
-        formatted_messages = [
-            {
-                "id": message[0],
-                "name": message[1],
-                "email": message[2],
-                "subject": message[3],
-                "message_content": message[4],
-                "timestamp": message[5]
-            }
-            for message in messages
-        ]
-        return formatted_messages, 200

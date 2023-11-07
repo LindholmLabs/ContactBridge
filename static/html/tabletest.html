@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages Table with HTMX</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .pagination {
+            padding: 10px;
+            text-align: center;
+        }
+        .pagination a {
+            padding: 5px 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<div id="messages-table">
+    <!-- This is where our messages table will be loaded -->
+    <div hx-get="/api/messages?page=1&page_size=10" hx-trigger="load" hx-target="#messages-table">
+        Loading messages...
+    </div>
+</div>
+
+<script>
+    // Function to handle the pagination click
+    function loadPage(page) {
+        htmx.ajax('GET', '/api/messages?page=' + page + '&page_size=10', {target: '#messages-table'});
+    }
+</script>
+
+</body>
+</html>

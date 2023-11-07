@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
-    subject TEXT NOT NULL,
-    message_content TEXT NOT NULL,
+    subject TEXT,
+    content TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
     relevance NUMERIC
 );

@@ -36,7 +36,7 @@
         <a href="?page={{ i }}">{{ i }}</a>
     </li>
     {% endfor %}
-    <li class="{% if table.current_page == table.total_pages %}disabled{% else %}waves-effect{% endif %}">
+    <li class="{% if table.current_page == table.total_pages %}disabled{% else %}waves-effect no-hover-effect{% endif %}">
         <a href="javascript:void(0);" onclick="changePage('next')"><i class="material-icons">chevron_right</i></a>
     </li>
 </ul>

@@ -67,3 +67,8 @@ def login():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('web_interface.login'))
+
+
+@web_interface.route('/test')
+def test():
+    return redirect(url_for('static', filename='html/tabletest.html'))
