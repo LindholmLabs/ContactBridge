@@ -1,10 +1,9 @@
 import json
 from pathlib import Path
 
-from flask import Flask, request, redirect, url_for, render_template, session
+from flask import request, redirect, url_for, render_template, session
 from dbrepository import DatabaseRepository
 from . import web_interface
-from .tableBuilder import TableBuilder
 from .tableFactory import TableFactory
 
 db = DatabaseRepository()

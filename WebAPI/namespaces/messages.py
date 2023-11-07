@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, render_template, make_response
 from flask_restx import Namespace, Resource, fields
 
 from database.models.messages import MessageModel
@@ -36,12 +36,14 @@ paginated_message_model = messages_ns.model('MessageList', {
 @messages_ns.route('/')
 class MessageList(Resource):
 
+    @messages_ns.doc('get_messages')
     @messages_ns.param('sort_by', 'Field to sort the messages by')
     @messages_ns.param('sort_order', 'Order to sort the messages (ASC or DESC)')
     @messages_ns.param('page', 'The page to retrieve')
     @messages_ns.param('page_size', 'The number of messages to retrieve per page')
-    @messages_ns.marshal_list_with(paginated_message_model)
+    @messages_ns.produces(['application/json', 'text/html'])
     def get(self):
+        """Get (paginated) messages (HTML or JSON)"""
         args = request.args
         page = args.get('page', 1, type=int)
         page_size = args.get('page_size', 10, type=int)
@@ -57,12 +59,22 @@ class MessageList(Resource):
 
         messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order)
 
-        return {
-            'messages': messages,
-            'total_pages': total_pages,
-            'current_page': page,
-            'page_size': page_size
-        }
+        accept_header = request.headers.get('Accept', '')
+        if 'text/html' in accept_header:
+            response = make_response(render_template('messages_template.html', messages=messages))
+            response.headers['X-Total-Pages'] = total_pages
+            response.headers['X-Current-Page'] = page
+            return response
+
+            return render_template('messages_template.html', messages=messages)
+        else:
+            # Default to JSON response
+            return {
+                'messages': messages,
+                'total_pages': total_pages,
+                'current_page': page,
+                'page_size': page_size
+            }
 
     # Create message
     @messages_ns.expect(message_create_model)

@@ -7,23 +7,29 @@ class MessageModel:
     def __init__(self):
         self.db_repository = DbRepository()
 
-    def get_page(self, page, page_size, sort="id", sort_order="ASC"):
+    def get_page(self, page, page_size, sort="id", sort_order="ASC", search=''):
+        search_term = f"%{search}%"
         total_messages_query = 'SELECT COUNT(*) FROM messages'
         total_messages = self.db_repository.execute_query(total_messages_query, expect_result=True)[0][0]
+
+        common_sql_query_base = f"""
+               FROM messages
+               WHERE (name LIKE ? OR email LIKE ? OR subject LIKE ? OR content LIKE ?)
+           """
 
         offset = (page - 1) * page_size
         total_pages = math.ceil(total_messages / page_size)
 
         paginated_messages_query = f"""
-            SELECT id, name, email, subject, content, timestamp, relevance 
-            FROM messages
-            ORDER BY {sort} {sort_order} 
-            LIMIT ? OFFSET ?
-        """
+                SELECT id, name, email, subject, content, timestamp, relevance
+                {common_sql_query_base}
+                ORDER BY {sort} {sort_order} 
+                LIMIT ? OFFSET ?
+            """
 
         paginated_messages = self.db_repository.execute_query(
             paginated_messages_query,
-            (page_size, offset),
+            (search_term, search_term, search_term, search_term, page_size, offset),
             expect_result=True
         )
 

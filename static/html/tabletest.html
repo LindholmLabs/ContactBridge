@@ -2,55 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Messages Table with HTMX</title>
+    <title>Messages</title>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org"></script>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        .pagination {
-            padding: 10px;
-            text-align: center;
-        }
-        .pagination a {
-            padding: 5px 10px;
-            margin: 5px;
-            border: 1px solid #ddd;
-            text-decoration: none;
-        }
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-        .pagination a:hover:not(.active) {
-            background-color: #ddd;
-        }
-    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Messages</h2>
 
-<div id="messages-table">
-    <!-- This is where our messages table will be loaded -->
-    <div hx-get="/api/messages?page=1&page_size=10" hx-trigger="load" hx-target="#messages-table">
-        Loading messages...
+        <!-- Search Bar -->
+        <div class="input-field">
+            <input type="text" id="search-bar" placeholder="Search Messages..." hx-get="/api/messages" hx-trigger="keyup changed delay:500ms" hx-target="#table-body" hx-headers='{"Accept":"text/html"}' hx-indicator="#loading-indicator">
+            <div id="loading-indicator" style="display: none;">Loading...</div>
+        </div>
+
+        <!-- Messages Table -->
+        <table class="highlight responsive-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Timestamp</th>
+                    <th>Relevance</th>
+                </tr>
+            </thead>
+            <tbody id="table-body" hx-get="/api/messages" hx-trigger="load" hx-headers='{"Accept":"text/html"}'>
+                <!-- Table rows will be populated by HTMX -->
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <ul class="pagination" id="pagination-container">
+            <!-- Pagination links will be dynamically inserted here -->
+        </ul>
     </div>
-</div>
 
-<script>
-    // Function to handle the pagination click
-    function loadPage(page) {
-        htmx.ajax('GET', '/api/messages?page=' + page + '&page_size=10', {target: '#messages-table'});
-    }
-</script>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+    <script>
+        // JavaScript for dynamically updating pagination
+        function updatePagination(currentPage, totalPages) {
+            const container = document.getElementById('pagination-container');
+            container.innerHTML = ''; // Clear existing pagination
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = i === currentPage ? 'active' : 'waves-effect';
+                const a = document.createElement('a');
+                a.href = '#!';
+                a.textContent = i;
+                a.setAttribute('hx-get', '/api/messages?page=' + i);
+                a.setAttribute('hx-target', '#table-body');
+                a.setAttribute('hx-trigger', 'click');
+                a.setAttribute('hx-headers', '{"Accept":"text/html"}');
+                li.appendChild(a);
+                container.appendChild(li);
+            }
+        }
+
+        // Initial pagination setup
+        document.body.addEventListener('htmx:load', function(event) {
+            if (event.detail.path === '/api/messages') {
+                // Assuming the server sends back total pages and current page as data attributes
+                const totalPages = event.detail.xhr.getResponseHeader('X-Total-Pages');
+                const currentPage = event.detail.xhr.getResponseHeader('X-Current-Page');
+                updatePagination(parseInt(currentPage, 10), parseInt(totalPages, 10));
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,11 +1,10 @@
 from WebInterface.tableBuilder import TableBuilder
-from dbrepository import DatabaseRepository
-
+from database.models.messages import MessageModel
 
 class TableFactory:
 
     def __init__(self):
-        self.db = DatabaseRepository()
+        self.db_model = MessageModel()
 
     @staticmethod
     def delete_link(row_data):
@@ -15,7 +14,7 @@ class TableFactory:
     def flag_link(row_data):
         return f'<a href="/message/flag/{row_data[0]}" class="flag-icon" title="Flag Message"><i class="material-icons">flag</i></a>'
 
-    def get_message_table(self, page=0, page_size=10):
+    def get_message_table(self, page=0, page_size=10, sort='id', sort_order='ASC', search=''):
         headers = [
             ("ID", "70px"),
             ("Sender", "100px"),
@@ -25,7 +24,7 @@ class TableFactory:
             ("", "50px")
         ]
 
-        messages, total_pages = self.db.get_messages(page, page_size)
+        messages, total_pages = self.db_model.get_page(page, page_size, sort, sort_order, search)
 
         table_data = (TableBuilder()
                       .set_headers(headers)
@@ -35,8 +34,8 @@ class TableFactory:
                       .set_current_page(page)
                       .set_sortable(["ID"])
                       .set_on_click("/message/{0}")
-                      .add_callback_column(self.flag_link)
-                      .add_callback_column(self.delete_link)
+                      #.add_callback_column(self.flag_link)
+                      #.add_callback_column(self.delete_link)
                       .get_table_data())
 
         return table_data
