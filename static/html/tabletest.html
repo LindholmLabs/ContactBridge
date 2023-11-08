@@ -3,77 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Messages</title>
-    <!-- Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- HTMX -->
-    <script src="https://unpkg.com/htmx.org"></script>
 </head>
 <body>
     <div class="container">
         <h2>Messages</h2>
 
-        <!-- Search Bar -->
         <div class="input-field">
-            <input type="text" id="search-bar" placeholder="Search Messages..." hx-get="/api/messages" hx-trigger="keyup changed delay:500ms" hx-target="#table-body" hx-headers='{"Accept":"text/html"}' hx-indicator="#loading-indicator">
+            <input type="text" id="search-bar" placeholder="Search Messages..." onkeyup="searchData()">
             <div id="loading-indicator" style="display: none;">Loading...</div>
         </div>
 
-        <!-- Messages Table -->
         <table class="highlight responsive-table">
-            <thead>
+            <thead id="table-headers">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Subject</th>
-                    <th>Timestamp</th>
-                    <th>Relevance</th>
+                    <th data-field="id" data-order="asc">ID</th>
+                    <th data-field="name" data-order="asc">Name</th>
+                    <th data-field="email" data-order="asc">Email</th>
+                    <th data-field="subject" data-order="asc">Subject</th>
+                    <th data-field="timestamp" data-order="asc">Timestamp</th>
+                    <th data-field="relevance" data-order="asc">Relevance</th>
                 </tr>
             </thead>
-            <tbody id="table-body" hx-get="/api/messages" hx-trigger="load" hx-headers='{"Accept":"text/html"}'>
-                <!-- Table rows will be populated by HTMX -->
+            <tbody id="table-body">
+                <!-- Table data -->
             </tbody>
         </table>
 
-        <!-- Pagination -->
         <ul class="pagination" id="pagination-container">
-            <!-- Pagination links will be dynamically inserted here -->
+            <!-- Pagination  -->
         </ul>
+
+        <select id="page-size" onchange="searchData('messages')">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+
     </div>
 
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-    <script>
-        // JavaScript for dynamically updating pagination
-        function updatePagination(currentPage, totalPages) {
-            const container = document.getElementById('pagination-container');
-            container.innerHTML = ''; // Clear existing pagination
+    <script>const API_ENDPOINT = '/api/messages/';</script>
 
-            for (let i = 1; i <= totalPages; i++) {
-                const li = document.createElement('li');
-                li.className = i === currentPage ? 'active' : 'waves-effect';
-                const a = document.createElement('a');
-                a.href = '#!';
-                a.textContent = i;
-                a.setAttribute('hx-get', '/api/messages?page=' + i);
-                a.setAttribute('hx-target', '#table-body');
-                a.setAttribute('hx-trigger', 'click');
-                a.setAttribute('hx-headers', '{"Accept":"text/html"}');
-                li.appendChild(a);
-                container.appendChild(li);
-            }
-        }
-
-        // Initial pagination setup
-        document.body.addEventListener('htmx:load', function(event) {
-            if (event.detail.path === '/api/messages') {
-                // Assuming the server sends back total pages and current page as data attributes
-                const totalPages = event.detail.xhr.getResponseHeader('X-Total-Pages');
-                const currentPage = event.detail.xhr.getResponseHeader('X-Current-Page');
-                updatePagination(parseInt(currentPage, 10), parseInt(totalPages, 10));
-            }
-        });
-    </script>
+    <script src="/static/js/pagination.js"></script>
 </body>
 </html>

@@ -1,8 +1,11 @@
 from flask import request, render_template, make_response
 from flask_restx import Namespace, Resource, fields
 
+
 from database.models.messages import MessageModel
 from database.repository import DbRepository
+
+
 
 messages_ns = Namespace('messages', description='Message operations')
 
@@ -37,6 +40,7 @@ paginated_message_model = messages_ns.model('MessageList', {
 class MessageList(Resource):
 
     @messages_ns.doc('get_messages')
+    @messages_ns.param('query', 'search query')
     @messages_ns.param('sort_by', 'Field to sort the messages by')
     @messages_ns.param('sort_order', 'Order to sort the messages (ASC or DESC)')
     @messages_ns.param('page', 'The page to retrieve')
@@ -45,6 +49,7 @@ class MessageList(Resource):
     def get(self):
         """Get (paginated) messages (HTML or JSON)"""
         args = request.args
+        query = args.get('query', '', type=str)
         page = args.get('page', 1, type=int)
         page_size = args.get('page_size', 10, type=int)
         sort_by = args.get('sort_by', 'id')  # Default sort by 'id'
@@ -57,7 +62,7 @@ class MessageList(Resource):
         if sort_by not in valid_sort_fields:
             messages_ns.abort(400, f"Invalid sort_by field. Must be one of {valid_sort_fields}")
 
-        messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order)
+        messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order, search=query)
 
         accept_header = request.headers.get('Accept', '')
         if 'text/html' in accept_header:
@@ -65,10 +70,7 @@ class MessageList(Resource):
             response.headers['X-Total-Pages'] = total_pages
             response.headers['X-Current-Page'] = page
             return response
-
-            return render_template('messages_template.html', messages=messages)
         else:
-            # Default to JSON response
             return {
                 'messages': messages,
                 'total_pages': total_pages,
