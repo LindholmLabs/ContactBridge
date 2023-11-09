@@ -6,5 +6,3 @@ blueprint = Blueprint('api', __name__)
 api = Api(blueprint)
 
 api.add_namespace(messages_ns)
-
-from . import routes

@@ -1,11 +1,8 @@
 from flask import request, render_template, make_response
 from flask_restx import Namespace, Resource, fields
 
-
 from database.models.messages import MessageModel
 from database.repository import DbRepository
-
-
 
 messages_ns = Namespace('messages', description='Message operations')
 
@@ -62,11 +59,12 @@ class MessageList(Resource):
         if sort_by not in valid_sort_fields:
             messages_ns.abort(400, f"Invalid sort_by field. Must be one of {valid_sort_fields}")
 
-        messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order, search=query)
+        messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order,
+                                                       search=query)
 
         accept_header = request.headers.get('Accept', '')
         if 'text/html' in accept_header:
-            response = make_response(render_template('messages_template.html', messages=messages))
+            response = make_response(render_template('component/messages_template.html', messages=messages))
             response.headers['X-Total-Pages'] = total_pages
             response.headers['X-Current-Page'] = page
             return response

@@ -32,7 +32,7 @@ class SpamDetector:
 if __name__ == "__main__":
     spam_detector = SpamDetector()
 
-    prediction = spam_detector.detect_spam('Hello, here today at not a scam.cu.uk.rust create your own mlm now')
+    prediction = spam_detector.detect_spam('This is a test message')
 
     if prediction < .05:
         print("not spam")

@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="input-field col s10">
+        <input type="text" id="search-bar" placeholder="Search {{ api_endpoint }}...">
+    </div>
+    <div class="input-field col s2">
+        <select id="page-size" onchange="searchData()">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+</div>
+
+<table class="highlight table-instance">
+    <thead id="table-headers">
+    <tr>
+        <th data-field="id" data-order="asc" class="sortable-header">ID <i class="material-icons tiny">unfold_more</i></th>
+        <th data-field="relevance" data-order="asc" class="sortable-header">Relevance <i class="material-icons tiny">unfold_more</i></th>
+        <th data-field="name" data-order="asc" class="sortable-header">Name <i class="material-icons tiny">unfold_more</i></th>
+        <th data-field="content" data-order="asc" class="sortable-header">Content <i class="material-icons tiny">unfold_more</i></th>
+    </tr>
+    </thead>
+    <tbody id="table-body">
+    <!-- Table data -->
+    </tbody>
+</table>
+
+<ul class="pagination" id="pagination-container">
+    <!-- Pagination  -->
+</ul>
+
+<script>
+
+    const API_ENDPOINT = '/api/{{ api_endpoint }}/';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        M.AutoInit();
+        const debouncedSearchData = debounce(searchData, 500);
+        document.getElementById('search-bar').addEventListener('keyup', debouncedSearchData);
+        sortTableByHeader('id');
+
+        fetchData(API_ENDPOINT, { page: 1, page_size: 10 });
+    });
+
+    function debounce(func, delay) {
+        let debounceTimer;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+</script>
