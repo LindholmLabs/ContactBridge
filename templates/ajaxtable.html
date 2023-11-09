@@ -1,6 +1,6 @@
 <div class="row">
     <div class="input-field col s10">
-        <input type="text" id="search-bar" placeholder="Search Messages...">
+        <input type="text" id="search-bar" placeholder="Search {{ api_endpoint }}...">
     </div>
     <div class="input-field col s2">
         <select id="page-size" onchange="searchData()">
@@ -32,7 +32,7 @@
 
 <script>
 
-    const API_ENDPOINT = '/api/messages/';
+    const API_ENDPOINT = '/api/{{ api_endpoint }}/';
 
     document.addEventListener('DOMContentLoaded', function() {
         M.AutoInit();
@@ -41,7 +41,6 @@
         sortTableByHeader('id');
 
         fetchData(API_ENDPOINT, { page: 1, page_size: 10 });
-        sortTableByHeader('id');
     });
 
     function debounce(func, delay) {

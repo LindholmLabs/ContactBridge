@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 
 from flask import request, redirect, url_for, render_template, session
+from jinja2 import TemplateNotFound
+
 from dbrepository import DatabaseRepository
 from . import web_interface
 from .tableFactory import TableFactory
@@ -15,12 +17,7 @@ def home():
     if not session.get('logged_in'):
         return redirect(url_for('web_interface.login'))
 
-    page_number = request.args.get('page', 1, type=int)
-
-    tables = TableFactory()
-    message_table = tables.get_message_table(page_number)
-
-    return render_template('home.html', page_title="home", table=message_table)
+    return render_template('home.html', page_title='Messages', api_endpoint='messages')
 
 
 @web_interface.route('/integrations')
