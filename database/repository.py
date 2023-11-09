@@ -8,22 +8,23 @@ class DbRepository:
 
     def __init__(self):
         self.connection = sqlite3.connect(self.DB_PATH, check_same_thread=False)
-        self.cursor = self.connection.cursor()
         self.setup_database()
 
     def execute_query(self, query, parameters=(), expect_result=False):
-        self.cursor.execute(query, parameters)
+        with self.connection:
+            cursor = self.connection.cursor()
+            cursor.execute(query, parameters)
 
-        if expect_result:
-            return self.cursor.fetchall()
-        else:
-            self.connection.commit()
+            if expect_result:
+                result = cursor.fetchall()
+                cursor.close()
+                return result
 
     def setup_database(self):
         with open(os.path.join(self.CURRENT_DIR, 'db.sql'), 'r') as sql_file:
             sql_script = sql_file.read()
-        self.connection.executescript(sql_script)
-        self.connection.commit()
+        with self.connection:
+            self.connection.executescript(sql_script)
 
     def close_connection(self):
         self.connection.close()

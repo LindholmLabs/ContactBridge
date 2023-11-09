@@ -12,7 +12,7 @@
         {% endfor %}
     </tr>
     </thead>
-    <tbody>
+    <tbody id="table-body">
     {% for row in table.rows %}
     <tr onclick="window.location.href='{{ table.row_click_url_template.format(row[0]) }}';">
         {% for cell in row %}

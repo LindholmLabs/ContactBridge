@@ -58,7 +58,7 @@ class MessageList(Resource):
         if sort_order not in ['ASC', 'DESC']:
             messages_ns.abort(400, "sort_order must be either 'ASC' or 'DESC'")
 
-        valid_sort_fields = ['id', 'name', 'email', 'subject', 'timestamp', 'relevance']
+        valid_sort_fields = ['id', 'name', 'email', 'subject', 'timestamp', 'relevance', 'content']
         if sort_by not in valid_sort_fields:
             messages_ns.abort(400, f"Invalid sort_by field. Must be one of {valid_sort_fields}")
 

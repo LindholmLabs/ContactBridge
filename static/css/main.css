@@ -108,7 +108,6 @@ h1.mobile {
 }
 
 table tr, table td {
-    padding: 0;
     margin: 0 !important;
 }
 
@@ -118,4 +117,13 @@ table tr, table td {
 
 .pagination .active {
     background-color: var(--primary-color) !important;
+}
+
+.sortable-header {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sortable-header:hover {
+    text-decoration: underline;
 }

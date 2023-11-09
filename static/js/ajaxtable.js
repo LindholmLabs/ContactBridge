@@ -17,7 +17,6 @@ function fetchData(endpoint, queryParams) {
     xhr.send();
 }
 
-// handle search input for messages or users
 function searchData() {
     const searchInput = document.getElementById('search-bar').value;
     const pageSize = document.getElementById('page-size').value;
@@ -28,17 +27,18 @@ function searchData() {
     fetchData(API_ENDPOINT, queryParams);
 }
 
-// Function to update pagination
 function updatePagination(currentPage, totalPages, pageSize) {
     const container = document.getElementById('pagination-container');
     container.innerHTML = ''; // Clear existing pagination
 
-    // Create the 'Back' button
+    // create back button
     const backLi = document.createElement('li');
     backLi.className = currentPage === 1 ? 'disabled' : 'waves-effect';
     const backA = document.createElement('a');
-    backA.href = '#!';
-    backA.innerHTML = '&laquo;';
+    const backIcon = document.createElement('i');
+    backIcon.className = 'material-icons';
+    backIcon.textContent = 'chevron_left';
+    backA.appendChild(backIcon);
     backA.onclick = function() {
         if (currentPage > 1) {
             fetchData(API_ENDPOINT, { page: currentPage - 1, page_size: pageSize });
@@ -47,12 +47,11 @@ function updatePagination(currentPage, totalPages, pageSize) {
     backLi.appendChild(backA);
     container.appendChild(backLi);
 
-    // Create the page number buttons
+    // Create pagination buttons
     for (let i = 1; i <= totalPages; i++) {
         const li = document.createElement('li');
         li.className = i === currentPage ? 'active' : 'waves-effect';
         const a = document.createElement('a');
-        a.href = '#!';
         a.textContent = i;
         a.onclick = function() {
             fetchData(API_ENDPOINT, { page: i, page_size: pageSize });
@@ -61,12 +60,14 @@ function updatePagination(currentPage, totalPages, pageSize) {
         container.appendChild(li);
     }
 
-    // Create the 'Forward' button
+    // create forward button
     const forwardLi = document.createElement('li');
     forwardLi.className = currentPage === totalPages ? 'disabled' : 'waves-effect';
     const forwardA = document.createElement('a');
-    forwardA.href = '#!';
-    forwardA.innerHTML = '&raquo;';
+    const forwardIcon = document.createElement('i');
+    forwardIcon.className = 'material-icons';
+    forwardIcon.textContent = 'chevron_right';
+    forwardA.appendChild(forwardIcon);
     forwardA.onclick = function() {
         if (currentPage < totalPages) {
             fetchData(API_ENDPOINT, { page: currentPage + 1, page_size: pageSize });
@@ -77,7 +78,7 @@ function updatePagination(currentPage, totalPages, pageSize) {
 }
 
 // Function to sort table by clicking on headers
-function sortTableByHeader(type) {
+function sortTableByHeader() {
     document.querySelectorAll('#table-headers th').forEach(header => {
         header.addEventListener('click', () => {
             const sortField = header.getAttribute('data-field');
@@ -90,16 +91,8 @@ function sortTableByHeader(type) {
                 sort_order: sortOrder,
                 page_size: pageSize
             };
-            fetchData(`/api/${type}`, queryParams);
-            // Toggle sort order for the next click
+            fetchData(API_ENDPOINT, queryParams);
             header.setAttribute('data-order', sortOrder === 'asc' ? 'desc' : 'asc');
         });
     });
 }
-
-// Initial fetch for messages and setup headers sorting
-document.addEventListener('DOMContentLoaded', function() {
-    M.AutoInit();  // Initialize all Materialize components
-    fetchData(API_ENDPOINT, { page: 1, page_size: 10 });
-    sortTableByHeader('messages');
-});

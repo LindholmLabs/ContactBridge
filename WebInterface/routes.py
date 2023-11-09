@@ -15,22 +15,12 @@ def home():
     if not session.get('logged_in'):
         return redirect(url_for('web_interface.login'))
 
-    messages = db.get_all_messages()
+    page_number = request.args.get('page', 1, type=int)
 
-    formatted_messages = [
-        {
-            "id": message[0],
-            "name": message[1],
-            "email": message[2],
-            "subject": message[3],
-            "message_content": message[4],
-            "timestamp": message[5],
-            "relevance": message[6]
-        }
-        for message in messages
-    ]
+    tables = TableFactory()
+    message_table = tables.get_message_table(page_number)
 
-    return render_template('home.html', messages=formatted_messages, page_title="Messages")
+    return render_template('home.html', page_title="home", table=message_table)
 
 
 @web_interface.route('/integrations')
