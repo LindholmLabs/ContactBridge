@@ -1,9 +1,20 @@
+<div id="deleteConfirmationModal" class="modal">
+    <div class="modal-content">
+        <h4>Confirm deletion</h4>
+        <p>Are you sure you want to delete this item?</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="confirmDeleteButton">Delete</a>
+        <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+    </div>
+</div>
+
 <div class="row">
     <div class="input-field col s10">
         <input type="text" id="search-bar" placeholder="Search {{ api_endpoint }}...">
     </div>
     <div class="input-field col s2">
-        <select id="page-size" onchange="searchData()">
+        <select id="page-size">
             <option value="5">5</option>
             <option value="10" selected>10</option>
             <option value="25">25</option>
@@ -28,30 +39,15 @@
 </table>
 
 <ul class="pagination" id="pagination-container">
-    <!-- Pagination  -->
+    <!-- Pagination -->
 </ul>
 
 <script>
-
     const API_ENDPOINT = '/api/{{ api_endpoint }}/';
 
     document.addEventListener('DOMContentLoaded', function() {
         M.AutoInit();
-        const debouncedSearchData = debounce(searchData, 500);
-        document.getElementById('search-bar').addEventListener('keyup', debouncedSearchData);
-        sortTableByHeader('id');
-
-        fetchData(API_ENDPOINT, { page: 1, page_size: 10 });
+        new AjaxTable(API_ENDPOINT, 'table-headers', 'table-body', 'search-bar', 'page-size', 'pagination-container');
     });
-
-    function debounce(func, delay) {
-        let debounceTimer;
-        return function() {
-            const context = this;
-            const args = arguments;
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => func.apply(context, args), delay);
-        };
-    }
 
 </script>
