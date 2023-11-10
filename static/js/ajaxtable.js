@@ -8,7 +8,10 @@ function fetchData(endpoint, queryParams) {
     xhr.setRequestHeader('Accept', 'text/html');
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById('table-body').innerHTML = xhr.responseText;
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = xhr.responseText;
+            htmx.process(tableBody); // Reinitialize htmx for new content
+
             const totalPages = xhr.getResponseHeader('X-total-pages');
             const currentPage = xhr.getResponseHeader('X-current-page');
             updatePagination(parseInt(currentPage, 10), parseInt(totalPages, 10), queryParams.page_size, endpoint);

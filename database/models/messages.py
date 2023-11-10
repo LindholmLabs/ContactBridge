@@ -77,3 +77,7 @@ class MessageModel:
             WHERE id = ?
         """
         self.db_repository.execute_query(update_query, parameters)
+
+    def delete(self, message_id):
+        delete_query = "DELETE FROM messages WHERE id = ?"
+        self.db_repository.execute_query(delete_query, (message_id,))

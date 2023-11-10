@@ -1,6 +1,10 @@
+from datetime import datetime
+
 from flask import request, render_template, make_response
 from flask_restx import Namespace, Resource, fields
 
+from MessageTagging.spam_detector import SpamDetector
+from WebAPI.utils.mailer import Mailer
 from database.models.messages import MessageModel
 from database.repository import DbRepository
 
@@ -8,6 +12,8 @@ messages_ns = Namespace('messages', description='Message operations')
 
 db_repository = DbRepository()
 message_model = MessageModel()
+mailer = Mailer()
+sd = SpamDetector()
 
 message_read_model = messages_ns.model('Message', {
     'id': fields.Integer(readOnly=True, description='The message unique identifier'),
@@ -76,12 +82,31 @@ class MessageList(Resource):
                 'page_size': page_size
             }
 
-    # Create message
     @messages_ns.expect(message_create_model)
     def post(self):
+        """Create new message"""
         data = request.json
-        query = "INSERT INTO messages (name, email, content) VALUES (?, ?, ?)"
-        db_repository.execute_query(query, (data['name'], data['email'], data['content']))
+
+        relevance = float(sd.detect_spam(data['content']))
+        inverted_relevance = round(1 - relevance, 2)
+
+        if inverted_relevance > 0.5:
+            subject = f"""
+                {data['name']} Has contacted you from {data['email']}
+                At {datetime.now().time()}
+                """
+            content = data['content']
+            mailer.send_notification(subject, content)
+
+        parameters = (
+            data['name'],
+            data['email'],
+            data.get('subject', 'No subject'),
+            data['content'],
+            inverted_relevance
+        )
+
+        message_model.create(parameters)
         return {'message': 'Message saved successfully'}, 201
 
 
@@ -103,3 +128,9 @@ class Message(Resource):
         query = "UPDATE messages SET email = ?, content = ? WHERE id = ?"
         db_repository.execute_query(query, (data['email'], data['content'], id))
         return {'message': 'Message updated successfully'}, 200
+
+    @messages_ns.response(204, 'Message deleted')
+    def delete(self, id):
+        """Delete a message by id"""
+        message_model.delete(id)
+        return '', 204

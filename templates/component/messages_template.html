@@ -1,1 +1,1 @@
-{% for message in messages %}<tr><td>{{ message.id }}</td><td>{{ message.relevance }}</td><td>{{ message.name }}</td><td>{{ message.content }}</td></tr>{% endfor %}
+{% for message in messages %}<tr><td>{{ message.id }}</td><td>{{ message.relevance }}</td><td>{{ message.name }}</td><td>{{ message.content }}</td><td><a class="material-icons delete-button" hx-trigger="click" hx-delete="/api/messages/{{ message.id }}">delete</a></td></tr>{% endfor %}

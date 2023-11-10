@@ -6,7 +6,7 @@ class Mailer:
     def __init__(self):
         current_dir = Path(__file__).parent
 
-        settings_path = current_dir / '..' / 'settings.json'
+        settings_path = current_dir / '..' / '..' / 'settings.json'
 
         with open(settings_path, 'r') as f:
             settings = json.load(f)
