@@ -83,46 +83,27 @@ h1.mobile {
     height: 100%;
 }
 
-.delete-icon {
-    color: red;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.delete-icon:hover {
-    color: darkred;
-}
-
-.flag-icon {
-    color: orange;
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.flag-icon:hover {
-    color: grey;
-}
-
-.table-instance {
-    table-layout: fixed;
-    width: 100%;
+.row {
     min-width: 500px;
-    cursor: pointer;
+    max-width: 100%;
 }
 
 table tr, table td {
     margin: 0 !important;
+
 }
 
-.pagination li a, pagination li a i {
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.pagination .active {
-    background-color: var(--primary-color) !important;
+table td {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .sortable-header {
     cursor: pointer;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .sortable-header:hover {
@@ -132,6 +113,7 @@ table tr, table td {
 .delete-button {
     color: red;
     transition: color 0.1s;
+    cursor: pointer;
 }
 
 .delete-button:hover {

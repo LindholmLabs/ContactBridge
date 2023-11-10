@@ -1,5 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% include 'component/ajaxtable.html' %}
+    <br>
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s10"><a href="#inbox">Inbox</a></li>
+                <li class="tab col s2"><a href="#junk">Junk</a></li>
+            </ul>
+        </div>
+        <div id="inbox" class="col s12">
+            {% with context=messages_context %}
+                {% include 'component/ajaxtable.html' %}
+            {% endwith %}
+        </div>
+
+        <div id="junk" class="col s12">
+            {% with context=spam_context %}
+                {% include 'component/ajaxtable.html' %}
+            {% endwith %}
+        </div>
+    </div>
 {% endblock %}

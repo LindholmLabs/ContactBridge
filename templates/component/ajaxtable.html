@@ -1,53 +1,57 @@
-<div id="deleteConfirmationModal" class="modal">
+<div id="{{ context.id_prefix }}deleteConfirmationModal" class="modal">
     <div class="modal-content">
-        <h4>Confirm deletion</h4>
+        <h4>Delete Confirmation</h4>
         <p>Are you sure you want to delete this item?</p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="confirmDeleteButton">Delete</a>
-        <a href="#!" class="modal-close waves-effect waves-red btn-flat">Cancel</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+        <a href="#!" id="{{ context.id_prefix }}confirmDeleteButton" class="waves-effect waves-red btn-flat">Delete</a>
     </div>
 </div>
 
-<div class="row">
-    <div class="input-field col s10">
-        <input type="text" id="search-bar" placeholder="Search {{ api_endpoint }}...">
+<div class="{{ context.id_prefix }}table-container">
+    <!-- Search Bar -->
+    <div class="row">
+        <div class="input-field col s10">
+            <input type="text" id="{{ context.id_prefix }}search-bar" placeholder="Search...">
+        </div>
+        <div class="input-field col s2 tooltipped" data-position="right" data-tooltip="Select page size">
+            <select id="{{ context.id_prefix }}page-size">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+            </select>
+        </div>
     </div>
-    <div class="input-field col s2">
-        <select id="page-size">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-        </select>
-    </div>
-</div>
 
-<table class="highlight table-instance">
-    <thead id="table-headers">
-    <tr>
-        <th data-field="id" data-order="asc" class="sortable-header">ID <i class="material-icons tiny">unfold_more</i></th>
-        <th data-field="relevance" data-order="asc" class="sortable-header">Relevance <i class="material-icons tiny">unfold_more</i></th>
-        <th data-field="name" data-order="asc" class="sortable-header">Name <i class="material-icons tiny">unfold_more</i></th>
-        <th data-field="content" data-order="asc" class="sortable-header">Content <i class="material-icons tiny">unfold_more</i></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody id="table-body">
-    <!-- Table data -->
-    </tbody>
-</table>
+    <!-- Table -->
+    <table class="highlight {{ context.id_prefix }}table-instance">
+        <thead id="{{ context.id_prefix }}table-headers">
+        <tr>
+            {% for header, width in context.headers %}
+            <th {{context.id_prefix}}data-field="{{ header|lower }}" {{context.id_prefix}}data-order="asc"
+                class="sortable-header" style="width: {{ width }};">{{
+                header }} <i class="material-icons tiny">unfold_more</i></th>
+            {% endfor %}
+            <th></th> <!-- for the delete button column -->
+        </tr>
+        </thead>
+        <tbody id="{{ context.id_prefix }}table-body">
+        <!-- Table data -->
+        </tbody>
+    </table>
 
-<ul class="pagination" id="pagination-container">
     <!-- Pagination -->
-</ul>
+    <ul class="pagination" id="{{ context.id_prefix }}pagination-container">
+        <!-- Pagination content -->
+    </ul>
 
-<script>
-    const API_ENDPOINT = '/api/{{ api_endpoint }}/';
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            M.AutoInit();
+            new AjaxTable('/api/{{ context.api_endpoint }}/', '{{ context.id_prefix }}', '{{ context.id_prefix }}table-headers', '{{ context.id_prefix }}table-body', '{{ context.id_prefix }}search-bar', '{{ context.id_prefix }}page-size', '{{ context.id_prefix }}pagination-container');
+        });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        M.AutoInit();
-        new AjaxTable(API_ENDPOINT, 'table-headers', 'table-body', 'search-bar', 'page-size', 'pagination-container');
-    });
-
-</script>
+    </script>
+</div>

@@ -1,8 +1,9 @@
 class AjaxTable {
-    constructor(apiEndpoint, tableHeadersId, tableBodyId, searchBarId, pageSizeSelectorId, paginationContainerId) {
+    constructor(apiEndpoint, id_prefix, tableHeadersId, tableBodyId, searchBarId, pageSizeSelectorId, paginationContainerId) {
         this.apiEndpoint = apiEndpoint;
         this.tableHeadersId = tableHeadersId;
         this.tableBodyId = tableBodyId;
+        this.id_prefix = id_prefix;
         this.searchBarId = searchBarId;
         this.pageSizeSelectorId = pageSizeSelectorId;
         this.paginationContainerId = paginationContainerId;
@@ -18,7 +19,7 @@ class AjaxTable {
     }
 
     initEventListeners() {
-        const debouncedSearchData = this.debounce(this.searchData.bind(this), 500);
+        const debouncedSearchData = this.debounce(this.searchData.bind(this), 300);
         document.getElementById(this.searchBarId).addEventListener('keyup', debouncedSearchData);
 
         document.getElementById(this.pageSizeSelectorId).addEventListener('change', () => {
@@ -42,16 +43,21 @@ class AjaxTable {
     }
 
     confirmDelete(apiEndpoint, itemId) {
-        const deleteButton = document.getElementById('confirmDeleteButton');
-        deleteButton.onclick = () => this.performDeletion(apiEndpoint, itemId);
+        var instance = M.Modal.getInstance(document.getElementById(this.id_prefix + 'deleteConfirmationModal'));
 
-        // Open confirmation modal
-        var instance = M.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
+        // Set up the delete confirmation button's event listener
+        var confirmButton = document.getElementById(this.id_prefix + 'confirmDeleteButton');
+        confirmButton.onclick = () => {
+            this.performDeletion(apiEndpoint, itemId);
+            instance.close();
+        };
+
+        // Open the modal
         instance.open();
     }
 
     performDeletion(apiEndpoint, itemId) {
-        const deleteUrl = `${apiEndpoint}/${itemId}`;
+        const deleteUrl = `${apiEndpoint}${itemId}`;
 
         fetch(deleteUrl, { method: 'DELETE' })
             .then(response => {
@@ -184,15 +190,16 @@ class AjaxTable {
 
     searchData() {
         this.currentSearchQuery = document.getElementById(this.searchBarId).value;
+        this.currentPage = 1;
         this.fetchData();
     }
 
     sortTableByHeader() {
         document.querySelectorAll(`#${this.tableHeadersId} th`).forEach(header => {
             header.addEventListener('click', () => {
-                this.currentSortField = header.getAttribute('data-field');
-                this.currentSortOrder = header.getAttribute('data-order') === 'asc' ? 'desc' : 'asc';
-                header.setAttribute('data-order', this.currentSortOrder);
+                this.currentSortField = header.getAttribute(this.id_prefix + 'data-field');
+                this.currentSortOrder = header.getAttribute(this.id_prefix + 'data-order') === 'asc' ? 'desc' : 'asc';
+                header.setAttribute(this.id_prefix + 'data-order', this.currentSortOrder);
                 this.fetchData();
             });
         });
