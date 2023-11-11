@@ -17,7 +17,7 @@ def home():
     }
 
     spam_context = {
-        "api_endpoint": "messages",
+        "api_endpoint": "spam",
         "id_prefix": "spam-",
         "headers": [("ID", "10%"), ("Relevance", "10%"), ("Name", "30%"), ("Content", "50%")]
     }

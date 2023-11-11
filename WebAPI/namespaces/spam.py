@@ -3,17 +3,17 @@ from flask_restx import Namespace, Resource, fields
 
 from MessageTagging.spam_detector import SpamDetector
 from WebAPI.utils.mailer import Mailer
-from database.models.messages import MessageModel
+from database.models.spam import SpamModel
 from database.repository import DbRepository
 
-messages_ns = Namespace('messages', description='Message operations')
+spam_ns = Namespace('spam', description='Spam operations')
 
 db_repository = DbRepository()
-message_model = MessageModel()
+spam_model = SpamModel()
 mailer = Mailer()
 sd = SpamDetector()
 
-message_read_model = messages_ns.model('Message', {
+message_read_model = spam_ns.model('Message', {
     'id': fields.Integer(readOnly=True, description='The message unique identifier'),
     'name': fields.String(required=True, description='The senders name'),
     'email': fields.String(required=True, description='The email address of the sender'),
@@ -23,18 +23,18 @@ message_read_model = messages_ns.model('Message', {
     'relevance': fields.Float(readOnly=True, description='relevance, tries to set to low values for spam')
 })
 
-@messages_ns.route('/')
+@spam_ns.route('/')
 class MessageList(Resource):
 
-    @messages_ns.doc('get_messages')
-    @messages_ns.param('query', 'search query')
-    @messages_ns.param('sort_by', 'Field to sort the messages by')
-    @messages_ns.param('sort_order', 'Order to sort the messages (ASC or DESC)')
-    @messages_ns.param('page', 'The page to retrieve')
-    @messages_ns.param('page_size', 'The number of messages to retrieve per page')
-    @messages_ns.produces(['application/json', 'text/html'])
+    @spam_ns.doc('get spam')
+    @spam_ns.param('query', 'search query')
+    @spam_ns.param('sort_by', 'Field to sort the messages by')
+    @spam_ns.param('sort_order', 'Order to sort the messages (ASC or DESC)')
+    @spam_ns.param('page', 'The page to retrieve')
+    @spam_ns.param('page_size', 'The number of messages to retrieve per page')
+    @spam_ns.produces(['application/json', 'text/html'])
     def get(self):
-        """Get (paginated) messages (HTML or JSON)"""
+        """Get (paginated) spam (HTML or JSON)"""
         args = request.args
         query = args.get('query', '', type=str)
         page = args.get('page', 1, type=int)
@@ -43,13 +43,13 @@ class MessageList(Resource):
         sort_order = args.get('sort_order', 'ASC').upper()  # Default sort order 'ASC'
 
         if sort_order not in ['ASC', 'DESC']:
-            messages_ns.abort(400, "sort_order must be either 'ASC' or 'DESC'")
+            spam_ns.abort(400, "sort_order must be either 'ASC' or 'DESC'")
 
         valid_sort_fields = ['id', 'name', 'email', 'subject', 'timestamp', 'relevance', 'content']
         if sort_by not in valid_sort_fields:
-            messages_ns.abort(400, f"Invalid sort_by field. Must be one of {valid_sort_fields}")
+            spam_ns.abort(400, f"Invalid sort_by field. Must be one of {valid_sort_fields}")
 
-        messages, total_pages = message_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order,
+        messages, total_pages = spam_model.get_page(page, page_size, sort=sort_by, sort_order=sort_order,
                                                        search=query)
 
         accept_header = request.headers.get('Accept', '')
@@ -67,17 +67,17 @@ class MessageList(Resource):
             }
 
 
-@messages_ns.route('/<int:id>')
-@messages_ns.response(404, 'Message not found')
+@spam_ns.route('/<int:id>')
+@spam_ns.response(404, 'Message not found')
 class Message(Resource):
-    @messages_ns.marshal_with(message_read_model)
+    @spam_ns.marshal_with(message_read_model)
     def get(self, id):
-        return message_model.get(id)
+        return spam_ns.get(id)
         messages_ns.abort(404, "Message not found")
 
 
-    @messages_ns.response(204, 'Message deleted')
+    @spam_ns.response(204, 'Message deleted')
     def delete(self, id):
         """Delete a message by id"""
-        message_model.delete(id)
+        spam_ns.delete(id)
         return 'Deleted message', 204
