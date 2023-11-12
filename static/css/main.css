@@ -15,65 +15,10 @@
     --content-margin: 150px;
 }
 
-.user-view {
-    background: var(--gradient-start);
-    background: linear-gradient(268deg, var(--primary-color), var(--secondary-color));
-}
-
+/* Sidenav styles */
 .sidenav {
     width: var(--sidenav-width);
-    box-shadow: 0px 3px 3px 3px #888888;
-}
-
-.header {
-    font-family: var(--header-font-family);
-    border-bottom: 1px solid var(--border-color);
-}
-
-h1 {
-    font-size: var(--header-font-size);
-    line-height: var(--header-line-height);
-    background: -webkit-linear-gradient(var(--text-gradient-start), var(--text-gradient-end));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 0;
-    padding: 0.2em 0;
-}
-
-h1.mobile {
-    font-size: var(--header-font-size-mobile);
-    text-align: center;
-    flex-grow: 1;
-}
-
-.truncate-td {
-    max-width: var(--truncate-max-width);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.content {
-    max-width: 100%;
-    margin-left: var(--content-margin);
-    overflow: auto;
-}
-
-@media only screen and (max-width : 992px) {
-    .content {
-        margin-left: 0;
-    }
-}
-
-.nav-center {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.sidenav-trigger {
-    color: black;
-    flex-shrink: 0;
+    box-shadow: 0 3px 3px #888888;
 }
 
 .sidenav-content {
@@ -83,14 +28,57 @@ h1.mobile {
     height: 100%;
 }
 
+/* Header styles */
+.header {
+    font-family: var(--header-font-family);
+    border-bottom: 1px solid var(--border-color);
+}
+
+h1, h1.mobile {
+    background: -webkit-linear-gradient(var(--text-gradient-start), var(--text-gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    padding: 0.2em 0;
+    line-height: var(--header-line-height);
+}
+
+h1 {
+    font-size: var(--header-font-size);
+}
+
+h1.mobile {
+    font-size: var(--header-font-size-mobile);
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* User view styles */
+.user-view {
+    background: linear-gradient(268deg, var(--primary-color), var(--secondary-color));
+}
+
+/* Content styles */
+.content {
+    max-width: 100%;
+    margin-left: var(--content-margin);
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 992px) {
+    .content {
+        margin-left: 0;
+    }
+}
+
+/* Table and row styles */
+.row, table tr, table td {
+    margin: 0 !important;
+}
+
 .row {
     min-width: 500px;
     max-width: 100%;
-}
-
-table tr, table td {
-    margin: 0 !important;
-
 }
 
 table td {
@@ -100,6 +88,15 @@ table td {
     text-overflow: ellipsis;
 }
 
+/* Truncation styles */
+.truncate-td {
+    max-width: var(--truncate-max-width);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Sorting header styles */
 .sortable-header {
     cursor: pointer;
     transition: all 0.3s ease;
@@ -110,6 +107,7 @@ table td {
     text-decoration: underline;
 }
 
+/* Delete button styles */
 .delete-button {
     color: red;
     transition: color 0.1s;
@@ -118,4 +116,17 @@ table td {
 
 .delete-button:hover {
     color: darkred;
+}
+
+/* Sidenav trigger styles */
+.sidenav-trigger {
+    color: black;
+    flex-shrink: 0;
+}
+
+/* Flex container for navigation */
+.nav-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

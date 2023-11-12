@@ -17,23 +17,26 @@ spam_model = SpamModel()
 mailer = Mailer()
 sd = SpamDetector()
 
-message_create_model = contact_ns.model('Message', {
+message_create_model = contact_ns.model('Contact', {
     'name': fields.String(required=True, description='The senders name'),
     'email': fields.String(required=True, description='The email address of the sender'),
     'content': fields.String(required=True, description='The content of the message'),
 })
 
 
-@contact_ns.route('/contact')
+@contact_ns.route('/')
 class ContactResource(Resource):
 
     @contact_ns.expect(message_create_model)
     def post(self):
         """Contact form endpoint"""
         try:
-            data, subject, content = prepare_data(request.form)
+            data, subject, content = prepare_data()
             inverted_relevance = calculate_relevance(data['content'])
+        except Exception as e:
+            return {'message': 'Invalid data'}, 400
 
+        try:
             parameters = (
                 data['name'],
                 data['email'],
@@ -63,7 +66,12 @@ def calculate_relevance(content):
         return 1
 
 
-def prepare_data(form_data):
+def prepare_data():
+    if request.json:
+        form_data = request.json
+    else:
+        form_data = request.form
+
     name = form_data['name']
     email = form_data['email']
     content = form_data['content']

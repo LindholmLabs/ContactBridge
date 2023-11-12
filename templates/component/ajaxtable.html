@@ -15,7 +15,7 @@
         <div class="input-field col s10">
             <input type="text" id="{{ context.id_prefix }}search-bar" placeholder="Search...">
         </div>
-        <div class="input-field col s2 tooltipped" data-position="right" data-tooltip="Select page size">
+        <div class="input-field col s2 tooltipped" data-position="left" data-tooltip="Select page size">
             <select id="{{ context.id_prefix }}page-size">
                 <option value="5">5</option>
                 <option value="10" selected>10</option>
@@ -32,9 +32,8 @@
             {% for header, width in context.headers %}
             <th {{context.id_prefix}}data-field="{{ header|lower }}" {{context.id_prefix}}data-order="asc"
                 class="sortable-header" style="width: {{ width }};">{{
-                header }} <i class="material-icons tiny">unfold_more</i></th>
+                header }}{% if header %}<i class="material-icons tiny">unfold_more</i>{% endif %}</th>
             {% endfor %}
-            <th></th> <!-- for the delete button column -->
         </tr>
         </thead>
         <tbody id="{{ context.id_prefix }}table-body">

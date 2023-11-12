@@ -61,7 +61,21 @@ class SpamModel:
     def get(self, message_id):
         query = 'SELECT * FROM spam WHERE id = ?'
         result = self.db_repository.execute_query(query, (message_id,), expect_result=True)
-        return result[0] if result else None
+
+        if result:
+            message = result[0]
+            labeled_message = {
+                    'id': message[0],
+                    'name': message[1],
+                    'email': message[2],
+                    'subject': message[3],
+                    'content': message[4],
+                    'timestamp': message[5],
+                    'relevance': message[6]
+                }
+            return labeled_message
+
+        return None
 
     def create(self, parameters):
         create_query = """

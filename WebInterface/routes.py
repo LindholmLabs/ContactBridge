@@ -13,13 +13,13 @@ def home():
     messages_context = {
         "api_endpoint": "messages",
         "id_prefix": "message-",
-        "headers": [("ID", "10%"), ("Relevance", "20%"), ("Name", "30%"), ("Content", "40%")]
+        "headers": [("ID", "10%"), ("Relevance", "10%"), ("Name", "25%"), ("Content", "55%"), ("", "0")]
     }
 
     spam_context = {
         "api_endpoint": "spam",
         "id_prefix": "spam-",
-        "headers": [("ID", "10%"), ("Relevance", "10%"), ("Name", "30%"), ("Content", "50%")]
+        "headers": [("ID", "10%"), ("Relevance", "10%"), ("Name", "25%"), ("Content", "55%"), ("", "0")]
     }
 
     return render_template('/page/home.html', page_title='Messages', messages_context=messages_context, spam_context=spam_context)

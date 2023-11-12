@@ -11,3 +11,5 @@ api = Api(blueprint)
 api.add_namespace(messages_ns)
 api.add_namespace(contact_ns)
 api.add_namespace(spam_ns)
+
+
